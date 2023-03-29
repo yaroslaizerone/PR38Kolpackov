@@ -1,27 +1,36 @@
 from kivy.app import App
 from kivy.lang import Builder
-from kivy.uix.boxlayout import BoxLayout
-from kivy.config import Config
-import time
-
-Config.set('graphics', 'Resizable', '0')
-Config.set('graphics', 'width', '360')
-Config.set('graphics', 'height', '800')
+from kivy.uix.screenmanager import Screen, ScreenManager
 
 
-class CameraClick(BoxLayout):
-    def capture(self):
-        camera = self.ids['camera']
-        timestr = time.strftime("%Y%m%d_%H%M%S")
-        camera.export_to_png("IMG_" + timestr + ".png")
-        print("Captured")
+class CameraScreen(Screen):
+    pass
 
 
-class TestCamera(App):
+class MainScreen(Screen):
+    pass
+
+
+class ScreenManagement(ScreenManager):
+    pass
+
+
+class Main(App):
     def build(self):
-        Builder.load_file("./camera.kv")
-        return CameraClick()
+        return Builder.load_file("camera.kv")
+
+    def picture_taken(self):
+        print("Фото сохранено!")
+
+    def change_cam(self, instance):
+        camera = instance.parent.ids.xcamera
+        if camera.index == 0:
+            camera.index = int(camera.index) + 1
+        elif camera.index == 1:
+            camera.index = int(camera.index) - 1
+        else:
+            camera.index = camera.index
 
 
-if __name__ == '__main__':
-    TestCamera().run()
+if __name__ == "__main__":
+    Main().run()
