@@ -1,36 +1,58 @@
-from kivy.app import App
+from kivymd.app import MDApp
 from kivy.lang import Builder
-from kivy.uix.screenmanager import Screen, ScreenManager
+from kivymd.uix.screen import MDScreen
+from kivy.core.window import Window
+from kivy.uix.image import Image
+from kivymd.uix.list import OneLineAvatarListItem, ImageLeftWidget
+import time
+
+Window.size = (360, 800)
 
 
-class CameraScreen(Screen):
+class Homescreen(MDScreen):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+        # GET SELECTOR FROM KV FILE CAMERA
+        self.mycamera = self.ids.camera
+        self.myimage = Image()
+        self.resultbox = self.ids.resultbox
+        self.mybox = self.ids.mybox
+
+    def captureyouface(self):
+        # CREATE TIMESTAMP NOT FOR YOU FILE IMAGE
+        # THIS SCRIPT GET TIME MINUTES AND DAY NOW
+        timenow = time.strftime("%Y%m%d_%H%M%S")
+
+        # AND EXPORT YOU CAMERA CAPTURE TO PNG IMAGE
+        self.mycamera.export_to_png("myimage_{}.png".format(timenow))
+        self.myimage.source = "myimage_{}.png".format(timenow)
+        self.resultbox.add_widget(
+            OneLineAvatarListItem(
+                ImageLeftWidget(
+                    source="myimage_{}.png".format(timenow),
+                    size_hint_x=0.3,
+                    size_hint_y=1,
+
+                    # AND SET YOU WIDHT AND HEIGT YOU PHOTO
+                    size=(300, 300)
+
+                ),
+                text=self.ids.name.text
+            )
+
+        )
+
+
+class MainScreen(MDScreen):
     pass
 
 
-class MainScreen(Screen):
-    pass
-
-
-class ScreenManagement(ScreenManager):
-    pass
-
-
-class Main(App):
+class MyApp(MDApp):
     def build(self):
-        return Builder.load_file("camera.kv")
-
-    def picture_taken(self):
-        print("Фото сохранено!")
-
-    def change_cam(self, instance):
-        camera = instance.parent.ids.xcamera
-        if camera.index == 0:
-            camera.index = int(camera.index) + 1
-        elif camera.index == 1:
-            camera.index = int(camera.index) - 1
-        else:
-            camera.index = camera.index
+        Builder.load_file("camera.kv")
+        return MainScreen()
 
 
 if __name__ == "__main__":
-    Main().run()
+    MyApp().run()
