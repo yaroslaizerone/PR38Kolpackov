@@ -44,14 +44,10 @@ class Homescreen(MDScreen):
         )
 
 
-class MainScreen(MDScreen):
-    pass
-
-
 class MyApp(MDApp):
     def build(self):
         Builder.load_file("camera.kv")
-        return MainScreen()
+        return Homescreen()
 
 
 if __name__ == "__main__":
