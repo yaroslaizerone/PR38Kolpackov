@@ -13,18 +13,18 @@ class Homescreen(MDScreen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        # GET SELECTOR FROM KV FILE CAMERA
+        # получаем объекты разметки
         self.mycamera = self.ids.camera
         self.myimage = Image()
         self.resultbox = self.ids.resultbox
         self.mybox = self.ids.mybox
 
     def captureyouface(self):
-        # CREATE TIMESTAMP NOT FOR YOU FILE IMAGE
-        # THIS SCRIPT GET TIME MINUTES AND DAY NOW
+        # Создание временной метки для сохранения фото
+        # Получаем время
         timenow = time.strftime("%Y%m%d_%H%M%S")
 
-        # AND EXPORT YOU CAMERA CAPTURE TO PNG IMAGE
+        # Экспортируем полученное изображение в png
         self.mycamera.export_to_png("myimage_{}.png".format(timenow))
         self.myimage.source = "myimage_{}.png".format(timenow)
         self.resultbox.add_widget(
